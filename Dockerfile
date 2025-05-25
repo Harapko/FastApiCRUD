@@ -1,10 +1,22 @@
-FROM python:3.9
+FROM python:3.12-slim
 
-WORKDIR /code
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
 
-COPY requirements.txt /code/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /app
 
-COPY . /code
+# 1️⃣  Спершу залежності – під root
+COPY requirements.txt .
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# 2️⃣  Тепер створюємо некореневого користувача
+RUN adduser --disabled-password --gecos "" fastapi
+USER fastapi
+
+# 3️⃣  Додаємо решту коду
+COPY --chown=fastapi . .
+
+EXPOSE 8000
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "main:app", "--bind", "0.0.0.0:8000"]

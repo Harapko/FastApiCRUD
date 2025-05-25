@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 
 from Domain import models
-from Infrastracture import schemas
+from Application import schemas
 
 
 class IMenuItemRepository(ABC):

@@ -16,3 +16,17 @@ class Menu(Base):
     id = Column(Integer, primary_key=True, index=True)
     menu_name = Column(String, index=True)
     menu_items = relationship("MenuItem", back_populates="menu")
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, index=True)
+    hash = Column(String, index=True)
+    role_id = Column(Integer, ForeignKey("roles.id"), index=True)
+    role = relationship("Role", back_populates="users")
+
+class Role(Base):
+    __tablename__ = "roles"
+    id = Column(Integer, primary_key=True, index=True)
+    role_name = Column(String, index=True)
+    users = relationship("User", back_populates="role")

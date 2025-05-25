@@ -39,5 +39,30 @@ class MenuResposne(BaseModel):
     menu_name: str
     menu_items: List[MenuItemResposne]
 
+class CreateUserDto(BaseModel):
+    username: str
+    password: str
+    role_id: int
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    role_id: int
+
+class CreateRoleDto(BaseModel):
+    role_name: str
+
+class RoleResponse(BaseModel):
+    id: int
+    role_name: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
     class Config:
         model_config = {"from_attributes": True}

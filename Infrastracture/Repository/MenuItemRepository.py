@@ -3,9 +3,9 @@ from typing import Optional, List
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
-from Application.IMenuItemRepository import IMenuItemRepository
+from Application.IRepository.IMenuItemRepository import IMenuItemRepository
 from Domain import models
-from Infrastracture import schemas
+from Application import schemas
 
 
 class DBMenuItemRepository(IMenuItemRepository):
@@ -26,6 +26,8 @@ class DBMenuItemRepository(IMenuItemRepository):
 
     def get_menu_item(self, menu_item_id: int) -> Optional[models.MenuItem]:
         menu_item = self.db.query(models.MenuItem).filter(models.MenuItem.id == menu_item_id).first()
+        if not menu_item:
+            raise HTTPException(status_code=404, detail="Menu item not found")
         return menu_item
 
     def get_menu_items_by_menu_id(self, menu_id: int) -> List[models.MenuItem]:
